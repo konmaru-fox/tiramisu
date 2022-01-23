@@ -96,16 +96,15 @@ describe("Tiramisu savings club", () => {
 
     it("should increase group balance by message value when valid amount is provided", async function () {
         await contract.createGroup(addresses, names, 0);
-
-        let originalbalance = await contract.groups[1].balance;
-        originalbalance = originalbalance.toNumber();
-        await contract
-            .connect(account1)
-            .deposit({value: 100});
-
-        let laterbalance = await contract.groups[1].balance;
-        laterbalance = laterbalance.toNumber();
-
+    
+        let group1 = await contract.getGroup(1);
+        originalbalance = group1.balance.toNumber();
+    
+        await contract.connect(account1).deposit({value: 100});
+    
+        group1 = await contract.getGroup(1);
+        laterbalance = group1.balance.toNumber();
+    
         expect(laterbalance).to.equal(originalbalance + 100);
     });
 
@@ -209,4 +208,5 @@ describe("Tiramisu savings club", () => {
 
         expect(contract.groups[1].ownerIndex).to.equal(0);
   })
+})
 });
